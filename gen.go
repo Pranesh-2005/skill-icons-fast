@@ -4,47 +4,42 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"os"
 	"strings"
 )
 
 func main() {
-	iconsDir, err := os.ReadDir("./assets")
+	files, err := os.ReadDir("./assets")
 	if err != nil {
 		panic(err)
 	}
 
-	var b strings.Builder
+	icons := map[string]string{}
 
-	b.WriteString("package handler\n\n")
-	b.WriteString("var icons = map[string]string{\n")
-
-	for _, file := range iconsDir {
-		if file.IsDir() {
+	for _, f := range files {
+		if f.IsDir() {
 			continue
 		}
 
-		data, err := os.ReadFile("./assets/" + file.Name())
+		data, err := os.ReadFile("./assets/" + f.Name())
 		if err != nil {
 			panic(err)
 		}
 
-		name := strings.TrimSuffix(strings.ToLower(file.Name()), ".svg")
-
-		b.WriteString(fmt.Sprintf(
-			"\t%q: `%s`,\n",
-			name,
-			data,
-		))
+		name := strings.TrimSuffix(strings.ToLower(f.Name()), ".svg")
+		icons[name] = string(data)
 	}
 
-	b.WriteString("}\n")
-
-	err = os.WriteFile("./api/icons_data.go", []byte(b.String()), 0644)
+	out, err := json.Marshal(icons)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("icons_data.go generated")
+	err = os.WriteFile("icons.json", out, 0644)
+	if err != nil {
+		panic(err)
+	}
+
+	println("icons.json generated")
 }
