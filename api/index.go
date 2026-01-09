@@ -227,7 +227,7 @@ func iconRoute(r *gin.RouterGroup) {
 		svg := generateSvg(iconNames, perLine, hasTitles, align)
 
 		ctx.Header("Content-Type", "image/svg+xml")
-		ctx.Header("Cache-Control", "public, max-age=86400, s-maxage=31536000")
+		ctx.Header("Cache-Control", "public, max-age=31556952, s-maxage=31536000")
 		ctx.String(http.StatusOK, svg)
 	})
 }
