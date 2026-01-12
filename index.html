@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Icons - Showcase Your Technical Skills</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Design tokens */
+        :root {
+            --background: #0a0e27;
+            --foreground: #e4e4e7;
+            --surface: #1a1f3a;
+            --surface-hover: #252d47;
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --accent: #06b6d4;
+            --accent-light: #22d3ee;
+            --text-muted: #a1a1aa;
+            --border: #27293d;
+            --success: #10b981;
+        }
+
+        [data-theme="light"] {
+            --background: #ffffff;
+            --foreground: #09090b;
+            --surface: #f5f5f5;
+            --surface-hover: #e8e8e8;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --text-muted: #71717a;
+            --border: #e4e4e7;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--background);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--foreground);
+            transition: background-color 0.3s ease;
+            font-size: 0.875rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--surface-hover);
+        }
+
+        /* Main container */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Container for picker and preview */
+        .picker-section {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Search bar */
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            color: var(--foreground);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background-color: var(--surface-hover);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Icon grid */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .icon-card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .icon-card:hover {
+            background-color: var(--surface-hover);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .icon-card.selected {
+            border-color: var(--accent);
+            background-color: var(--surface-hover);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        .icon-image {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .icon-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            word-break: break-word;
+        }
+
+        /* Preview section */
+        .preview-panel {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .preview-panel h2 {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            align-content: flex-start;
+        }
+
+        .preview-icon {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--border);
+            margin: 1.5rem 0;
+        }
+
+        .code-section h3 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .code-display {
+            background-color: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.8rem;
+            color: var(--accent);
+            max-height: 120px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .copy-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            margin-bottom: 0.75rem;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .copy-btn.copied {
+            background-color: var(--success);
+        }
+
+        .clear-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background-color: var(--surface-hover);
+            border-color: var(--accent);
+            color: var(--foreground);
+        }
+
+        /* Features section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .picker-section {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-panel {
+                position: static;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            main {
+                padding: 1.5rem 1rem;
+            }
+
+            .hero {
+                margin-bottom: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .icon-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .picker-section {
+                gap: 1rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-card {
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">⚡ Skill Icons</div>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Showcase Your Skills</h1>
+            <p>Beautiful, customizable skill icons to showcase your technical expertise on GitHub, portfolios, and resumes. Pick your skills, copy the code, and display them anywhere.</p>
+        </section>
+
+        <!-- Picker and Preview -->
+        <section class="picker-section">
+            <div>
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        id="searchInput" 
+                        placeholder="Search skills (e.g., React, JavaScript, Python...)"
+                    >
+                </div>
+
+                <!-- Icon Grid -->
+                <div class="icon-grid" id="iconGrid"></div>
+            </div>
+
+            <!-- Preview Panel -->
+            <aside class="preview-panel">
+                <h2>Preview</h2>
+                <div class="preview-icons" id="previewIcons"></div>
+
+                <div class="divider"></div>
+
+                <div class="code-section">
+                    <h3>Markdown</h3>
+                    <div class="code-display" id="codeDisplay">No skills selected</div>
+                    <button class="copy-btn" id="copyBtn" style="display: none;">Copy Markdown</button>
+                </div>
+
+                <button class="clear-btn" id="clearBtn" style="display: none;">Clear All</button>
+            </aside>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Beautiful Icons</h3>
+                <p>Stunning, professionally designed skill icons in multiple styles to match your aesthetic.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Easy to Use</h3>
+                <p>Simple search and selection interface. Copy markdown or HTML with one click.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3>Use Anywhere</h3>
+                <p>Works with GitHub README files, personal portfolios, and professional resumes.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Constantly Updated</h3>
+                <p>New skills added regularly. Your feedback shapes what icons we create next.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>Customizable</h3>
+                <p>Adjust sizes, spacing, and styling to fit your personal branding perfectly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Open Source</h3>
+                <p>Completely free and open source. Contribute your own icons or improvements.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Skill Icons. Made with ❤️ for developers everywhere.</p>
+    </footer>
+
+    <script>
+        // Sample skill icons data
+        const skills = [
+            { name: 'Aave', id: 'aave' },
+            { name: 'Ableton', id: 'ableton' },
+            { name: 'Acrobat', id: 'acrobat' },
+            { name: 'ActivityPub', id: 'activitypub' },
+            { name: 'Actix', id: 'actix' },
+            { name: 'Adobe Spark', id: 'adobespark' },
+            { name: 'Adonis', id: 'adonis' },
+            { name: 'Aero', id: 'aero' },
+            { name: 'Affinity', id: 'affinity' },
+            { name: 'After Effects', id: 'aftereffects' },
+            { name: 'Agno', id: 'agno' },
+            { name: 'Aiogram', id: 'aiogram' },
+            { name: 'Airbyte', id: 'airbyte' },
+            { name: 'Airflow', id: 'airflow' },
+            { name: 'Aiscript', id: 'aiscript' },
+            { name: 'Alacritty', id: 'alacritty' },
+            { name: 'Alchemy', id: 'alchemy' },
+            { name: 'Alpine.js', id: 'alpinejs' },
+            { name: 'Amplify', id: 'amplify' },
+            { name: 'Anaconda', id: 'anaconda' },
+            { name: 'Android', id: 'android' },
+            { name: 'Android Studio', id: 'androidstudio' },
+            { name: 'Angular', id: 'angular' },
+            { name: 'Animate', id: 'animate' },
+            { name: 'Anki', id: 'anki' },
+            { name: 'Ansible', id: 'ansible' },
+            { name: 'ANSYS', id: 'ansys' },
+            { name: 'Ant Design', id: 'antdesign' },
+            { name: 'Apache', id: 'apache' },
+            { name: 'ApeWorx', id: 'apeworx' },
+            { name: 'ApexCharts', id: 'apexcharts' },
+            { name: 'API', id: 'api' },
+            { name: 'Apidog', id: 'apidog' },
+            { name: 'API Gateway', id: 'apigateway' },
+            { name: 'Apollo', id: 'apollo' },
+            { name: 'App Active', id: 'appactive' },
+            { name: 'AppCode', id: 'appcode' },
+            { name: 'Apple', id: 'apple' },
+            { name: 'App Store', id: 'appstore' },
+            { name: 'Apptainer', id: 'apptainer' },
+            { name: 'AppWrite', id: 'appwrite' },
+            { name: 'Aqua', id: 'aqua' },
+            { name: 'Arc Browser', id: 'arcbrowser' },
+            { name: 'Arch Linux', id: 'arch' },
+            { name: 'Arcjet', id: 'arcjet' },
+            { name: 'Arduino', id: 'arduino' },
+            { name: 'ArgoCD', id: 'argocd' },
+            { name: 'Arrow', id: 'arrow' },
+            { name: 'Aseprite', id: 'aseprite' },
+            { name: 'Assembly', id: 'assembly' },
+            { name: 'Astro', id: 'astro' },
+            { name: 'Athena', id: 'athena' },
+            { name: 'Atom', id: 'atom' },
+            { name: 'Audacity', id: 'audacity' },
+            { name: 'Audition', id: 'audition' },
+            { name: 'Aurora', id: 'aurora' },
+            { name: 'Authenticator', id: 'authenticator' },
+            { name: 'AuthJS', id: 'authjs' },
+            { name: 'AutoCAD', id: 'autocad' },
+            { name: 'AvaloniaUI', id: 'avaloniaui' },
+            { name: 'AWS', id: 'aws' },
+            { name: 'Axios', id: 'axios' },
+            { name: 'Azul', id: 'azul' },
+            { name: 'Azure', id: 'azure' },
+            { name: 'Azure DevOps', id: 'azuredevops' },
+            { name: 'Babel', id: 'babel' },
+            { name: 'Balancer', id: 'balancer' },
+            { name: 'Barba.js', id: 'barbajs' },
+            { name: 'Bash', id: 'bash' },
+            { name: 'Beam', id: 'beam' },
+            { name: 'Beeceptor', id: 'beeceptor' },
+            { name: 'Behance', id: 'behance' },
+            { name: 'Behat', id: 'behat' },
+            { name: 'Better Auth', id: 'betterauth' },
+            { name: 'Bevy', id: 'bevy' },
+            { name: 'BigQuery', id: 'bigquery' },
+            { name: 'Biome', id: 'biome' },
+            { name: 'Bitbucket', id: 'bitbucket' },
+            { name: 'Bitrix24', id: 'bitrix24' },
+            { name: 'Blazor', id: 'blazor' },
+            { name: 'Blender', id: 'blender' },
+            { name: 'Bluesky', id: 'bluesky' },
+            { name: 'Bokeh', id: 'bokeh' },
+            { name: 'Bootstrap', id: 'bootstrap' },
+            { name: 'Brave', id: 'brave' },
+            { name: 'Breeze', id: 'breeze' },
+            { name: 'Bridge', id: 'bridge' },
+            { name: 'BSD', id: 'bsd' },
+            { name: 'BTLO', id: 'btlo' },
+            { name: 'Bulma', id: 'bulma' },
+            { name: 'Bun', id: 'bun' },
+            { name: 'Burn', id: 'burn' },
+            { name: 'Burp Suite', id: 'burpsuite' },
+            { name: 'C', id: 'c' },
+            { name: 'CachyOS', id: 'cachyos' },
+            { name: 'Caddy', id: 'caddy' },
+            { name: 'Cairo', id: 'cairo' },
+            { name: 'Canva', id: 'canva' },
+            { name: 'Capacitor', id: 'capacitor' },
+            { name: 'Capture', id: 'capture' },
+            { name: 'Cashier', id: 'cashier' },
+            { name: 'Cassandra', id: 'cassandra' },
+            { name: 'Catppuccin', id: 'catppuccin' },
+            { name: 'CelerData', id: 'celerdata' },
+            { name: 'Celery', id: 'celery' },
+            { name: 'CentOS', id: 'centos' },
+            { name: 'Chainlink', id: 'chainlink' },
+            { name: 'Chakra UI', id: 'chakraui' },
+            { name: 'Chaos Blade', id: 'chaosblade' },
+            { name: 'Character Animator', id: 'characteranimator' },
+            { name: 'Chart.js', id: 'chartjs' },
+            { name: 'ChatGPT', id: 'chatgpt' },
+            { name: 'Chrome', id: 'chrome' },
+            { name: 'Chrome DevTools', id: 'chromedevtools' },
+            { name: 'Chromium', id: 'chromium' },
+            { name: 'CircleCI', id: 'circleci' },
+            { name: 'Claude', id: 'claude' },
+            { name: 'Clerk', id: 'clerk' },
+            { name: 'ClickHouse', id: 'clickhouse' },
+            { name: 'ClickUp', id: 'clickup' },
+            { name: 'CLion', id: 'clion' },
+            { name: 'Clojure', id: 'clojure' },
+            { name: 'Cloudflare', id: 'cloudflare' },
+            { name: 'CloudFormation', id: 'cloudformation' },
+            { name: 'CloudFront', id: 'cloudfront' },
+            { name: 'CloudWatch', id: 'cloudwatch' },
+            { name: 'CMake', id: 'cmake' },
+            { name: 'CockroachDB', id: 'cockroachdb' },
+            { name: 'Codeberg', id: 'codeberg' },
+            { name: 'Code::Blocks', id: 'codeblocks' },
+            { name: 'CodeIgniter', id: 'codeigniter' },
+            { name: 'CodePen', id: 'codepen' },
+            { name: 'CoffeeScript', id: 'coffeescript' },
+            { name: 'commercetools', id: 'commercetools' },
+            { name: 'Composer', id: 'composer' },
+            { name: 'Confluence', id: 'confluence' },
+            { name: 'Confluent', id: 'confluent' },
+            { name: 'Consul', id: 'consul' },
+            { name: 'Contentful', id: 'contentful' },
+            { name: 'C++', id: 'cpp' },
+            { name: 'Creative Cloud', id: 'creativecloud' },
+            { name: 'CrewAI', id: 'crewai' },
+            { name: 'Crystal', id: 'crystal' },
+            { name: 'C#', id: 'cs' },
+            { name: 'CSS', id: 'css' },
+            { name: 'CUDA', id: 'cuda' },
+            { name: 'Cursor', id: 'cursor' },
+            { name: 'Cypress', id: 'cypress' },
+            { name: 'D', id: 'd' },
+            { name: 'D3', id: 'd3' },
+            { name: 'Daft', id: 'daft' },
+            { name: 'Daily.dev', id: 'dailydev' },
+            { name: 'DaisyUI', id: 'daisyui' },
+            { name: 'Dapper', id: 'dapper' },
+            { name: 'Dart', id: 'dart' },
+            { name: 'Dask', id: 'dask' },
+            { name: 'Databricks', id: 'databricks' },
+            { name: 'DataDog', id: 'datadog' },
+            { name: 'DataGrip', id: 'datagrip' },
+            { name: 'DataSpell', id: 'dataspell' },
+            { name: 'DaVinci', id: 'davinci' },
+            { name: 'DBeaver', id: 'dbeaver' },
+            { name: 'dbt Labs', id: 'dbtlabs' },
+            { name: 'Debian', id: 'debian' },
+            { name: 'DeepSeek', id: 'deepseek' },
+            { name: 'Defold', id: 'defold' },
+            { name: 'Delta', id: 'delta' },
+            { name: 'Delta.rs', id: 'deltars' },
+            { name: 'Deno', id: 'deno' },
+            { name: 'Desmos', id: 'desmos' },
+            { name: 'Dev.to', id: 'devto' },
+            { name: 'DigitalOcean', id: 'digitalocean' },
+            { name: 'Dimension', id: 'dimension' },
+            { name: 'Directus', id: 'directus' },
+            { name: 'Discord', id: 'discord' },
+            { name: 'Discord Bots', id: 'discordbots' },
+            { name: 'Discord.js', id: 'discordjs' },
+            { name: 'Django', id: 'django' },
+            { name: 'Django REST', id: 'djangorestframework' },
+            { name: 'Docker', id: 'docker' },
+            { name: 'Docksal', id: 'docksal' },
+            { name: 'Docsify', id: 'docsify' },
+            { name: 'Doctrine', id: 'doctrine' },
+            { name: '.NET', id: 'dotnet' },
+            { name: 'Doris', id: 'doris' },
+            { name: 'Dreamweaver', id: 'dreamweaver' },
+            { name: 'Dremio', id: 'dremio' },
+            { name: 'Drizzle', id: 'drizzle' },
+            { name: 'Drupal', id: 'drupal' },
+            { name: 'Dubbo', id: 'dubbo' },
+            { name: 'DuckDB', id: 'duckdb' },
+            { name: 'DuckDuckGo', id: 'duckduckgo' },
+            { name: 'Dusk', id: 'dusk' },
+            { name: 'DynamoDB', id: 'dynamodb' },
+            { name: 'EC2', id: 'ec2' },
+            { name: 'Echo', id: 'echo' },
+            { name: 'Eclipse', id: 'eclipse' },
+            { name: 'ECR', id: 'ecr' },
+            { name: 'ECS', id: 'ecs' },
+            { name: 'Edge', id: 'edge' },
+            { name: 'EJS', id: 'ejs' },
+            { name: 'EKS', id: 'eks' },
+            { name: 'Elastic Beanstalk', id: 'elasticbeanstalk' },
+            { name: 'Elasticsearch', id: 'elasticsearch' },
+            { name: 'ELB', id: 'elb' },
+            { name: 'Electron', id: 'electron' },
+            { name: 'Element', id: 'element' },
+            { name: 'Elementor', id: 'elementor' },
+            { name: 'Element Plus', id: 'elementplus' },
+            { name: 'Elixir', id: 'elixir' },
+            { name: 'Elm', id: 'elm' },
+            { name: 'Elysia', id: 'elysia' },
+            { name: 'Emacs', id: 'emacs' },
+            { name: 'Ember', id: 'ember' },
+            { name: 'EMR', id: 'emr' },
+            { name: 'Emotion', id: 'emotion' },
+            { name: 'Envoyer', id: 'envoyer' },
+            { name: 'Erlang', id: 'erlang' },
+            { name: 'ESLint', id: 'eslint' },
+            { name: 'etcd', id: 'etcd' },
+            { name: 'Ethereum', id: 'ethereum' },
+            { name: 'EventBridge', id: 'eventbridge' },
+            { name: 'Excel', id: 'excel' },
+            { name: 'Expo', id: 'expo' },
+            { name: 'Express.js', id: 'expressjs' },
+            { name: 'Fabric', id: 'fabric' },
+            { name: 'FabricMC', id: 'fabricmc' },
+            { name: 'Facebook', id: 'facebook' },
+            { name: 'Fargate', id: 'fargate' },
+            { name: 'Fast.ai', id: 'fastai' },
+            { name: 'FastAPI', id: 'fastapi' },
+            { name: 'Fastlane', id: 'fastlane' },
+            { name: 'Fediverse', id: 'fediverse' },
+            { name: 'Fedora', id: 'fedora' },
+            { name: 'FFmpeg', id: 'ffmpeg' },
+            { name: 'Fiber', id: 'fiber' },
+            { name: 'Figma', id: 'figma' },
+            { name: 'Filament', id: 'filament' },
+            { name: 'Filmora', id: 'filmora' },
+            { name: 'Firebase', id: 'firebase' },
+            { name: 'Firefox', id: 'firefox' },
+            { name: 'Fiverr', id: 'fiverr' },
+            { name: 'Fivetran', id: 'fivetran' },
+            { name: 'Flameshot', id: 'flameshot' },
+            { name: 'Flask', id: 'flask' },
+            { name: 'Fleet', id: 'fleet' },
+            { name: 'Flink', id: 'flink' },
+            { name: 'Flutter', id: 'flutter' },
+            { name: 'FlutterFlow', id: 'flutterflow' },
+            { name: 'Fly.io', id: 'flyio' },
+            { name: 'Fonts', id: 'fonts' },
+            { name: 'Forge', id: 'forge' },
+            { name: 'Forgejo', id: 'forgejo' },
+            { name: 'ForgeMC', id: 'forgemc' },
+            { name: 'Forth', id: 'forth' },
+            { name: 'Fortran', id: 'fortran' },
+            { name: 'Foundry', id: 'foundry' },
+            { name: 'Framer', id: 'framer' },
+            { name: 'FrankenPHP', id: 'frankenphp' },
+            { name: 'freeCodeCamp', id: 'freecodecamp' },
+            { name: 'FreeCAD', id: 'freecad' },
+            { name: 'Freelancer', id: 'freelancer' },
+            { name: 'Fresco', id: 'fresco' },
+            { name: 'Fresh', id: 'fresh' },
+            { name: 'Fuse', id: 'fuse' },
+            { name: 'GameMaker Studio', id: 'gamemakerstudio' },
+            { name: 'Ganache', id: 'ganache' },
+            { name: 'Gatsby', id: 'gatsby' },
+            { name: 'GCP', id: 'gcp' },
+            { name: 'GDevelop', id: 'gdevelop' },
+            { name: 'Gemini', id: 'gemini' },
+            { name: 'Gentoo', id: 'gentoo' },
+            { name: 'Gherkin', id: 'gherkin' },
+            { name: 'GIMP', id: 'gimp' },
+            { name: 'Gin', id: 'gin' },
+            { name: 'Git', id: 'git' },
+            { name: 'Gitea', id: 'gitea' },
+            { name: 'Git Bash', id: 'gitbash' },
+            { name: 'GitHub', id: 'github' },
+            { name: 'GitHub Actions', id: 'githubactions' },
+            { name: 'GitHub Copilot', id: 'githubcopilot' },
+            { name: 'GitHub Desktop', id: 'githubdesktop' },
+            { name: 'GitHub Pages', id: 'githubpages' },
+            { name: 'GitKraken', id: 'gitkraken' },
+            { name: 'GitLab', id: 'gitlab' },
+            { name: 'Gleam', id: 'gleam' },
+            { name: 'Glue', id: 'glue' },
+            { name: 'GMail', id: 'gmail' },
+            { name: 'GMX', id: 'gmx' },
+            { name: 'GNOME', id: 'gnome' },
+            { name: 'Godot', id: 'godot' },
+            { name: 'GoLand', id: 'goland' },
+            { name: 'Go', id: 'golang' },
+            { name: 'Google Analytics', id: 'googleanalytics' },
+            { name: 'Google Apps Script', id: 'googleappsscript' },
+            { name: 'Google Colab', id: 'googlecolab' },
+            { name: 'Google Play', id: 'googleplay' },
+            { name: 'Google Play Console', id: 'googleplayconsole' },
+            { name: 'GORM', id: 'gorm' },
+            { name: 'Gradio', id: 'gradio' },
+            { name: 'Gradle', id: 'gradle' },
+            { name: 'Grafana', id: 'grafana' },
+            { name: 'Grails', id: 'grails' },
+            { name: 'Granica', id: 'granica' },
+            { name: 'Graphite', id: 'graphite' },
+            { name: 'GraphQL', id: 'graphql' },
+            { name: 'Grok', id: 'grok' },
+            { name: 'GROMACS', id: 'gromacs' },
+            { name: 'Groq', id: 'groq' },
+            { name: 'gRPC', id: 'grpc' },
+            { name: 'Grunt', id: 'grunt' },
+            { name: 'GSAP', id: 'gsap' },
+            { name: 'GTK', id: 'gtk' },
+            { name: 'Gulp', id: 'gulp' },
+            { name: 'HackerRank', id: 'hackerrank' },
+            { name: 'HackTheBox', id: 'hackthebox' },
+            { name: 'Hadoop', id: 'hadoop' },
+            { name: 'Hardhat', id: 'hardhat' },
+            { name: 'Haskell', id: 'haskell' },
+            { name: 'Haxe', id: 'haxe' },
+            { name: 'HaxeFlixel', id: 'haxeflixel' },
+            { name: 'Helia', id: 'helia' },
+            { name: 'Helix', id: 'helix' },
+            { name: 'Helm', id: 'helm' },
+            { name: 'Herd', id: 'herd' },
+            { name: 'Heroku', id: 'heroku' },
+            { name: 'Hexo', id: 'hexo' },
+            { name: 'Hibernate', id: 'hibernate' },
+            { name: 'Higress', id: 'higress' },
+            { name: 'Hive', id: 'hive' },
+            { name: 'HolyC', id: 'holyc' },
+            { name: 'Hono', id: 'hono' },
+            { name: 'Horizon', id: 'horizon' },
+            { name: 'HTML', id: 'html' },
+            { name: 'htmx', id: 'htmx' },
+            { name: 'htop', id: 'htop' },
+            { name: 'Hudi', id: 'hudi' },
+            { name: 'Hugging Face', id: 'huggingface' },
+            { name: 'Hugo', id: 'hugo' },
+            { name: 'Hydrogen', id: 'hydrogen' },
+            { name: 'Hyprland', id: 'hyprland' },
+            { name: 'i3', id: 'i3' },
+            { name: 'Iceberg', id: 'iceberg' },
+            { name: 'Iced', id: 'iced' },
+            { name: 'IDEA', id: 'idea' },
+            { name: 'Ignite', id: 'ignite' },
+            { name: 'Illustrator', id: 'illustrator' },
+            { name: 'Immuta', id: 'immuta' },
+            { name: 'Impala', id: 'impala' },
+            { name: 'InCopy', id: 'incopy' },
+            { name: 'InDesign', id: 'indesign' },
+            { name: 'Inertia', id: 'inertia' },
+            { name: 'Informatica', id: 'informatica' },
+            { name: 'Infura', id: 'infura' },
+            { name: 'Inkscape', id: 'inkscape' },
+            { name: 'Insomnia', id: 'insomnia' },
+            { name: 'Instagram', id: 'instagram' },
+            { name: 'Integrations', id: 'integrations' },
+            { name: 'IPFS', id: 'ipfs' },
+            { name: 'Itch.io', id: 'itchio' },
+            { name: 'Jaeger', id: 'jaeger' },
+            { name: 'Jamovi', id: 'jamovi' },
+            { name: 'Java', id: 'java' },
+            { name: 'JavaScript', id: 'javascript' },
+            { name: 'JAX', id: 'jax' },
+            { name: 'Jekyll', id: 'jekyll' },
+            { name: 'Jenkins', id: 'jenkins' },
+            { name: 'Jest', id: 'jest' },
+            { name: 'Jetpack Compose', id: 'jetpackcompose' },
+            { name: 'Jetstream', id: 'jetstream' },
+            { name: 'Jira', id: 'jira' },
+            { name: 'Joomla', id: 'joomla' },
+            { name: 'JQ Lang', id: 'jqlang' },
+            { name: 'jQuery', id: 'jquery' },
+            { name: 'JSON', id: 'json' },
+            { name: 'Julia', id: 'julia' },
+            { name: 'JUnit', id: 'junit' },
+            { name: 'Jupyter', id: 'jupyter' },
+            { name: 'JWT', id: 'jwt' },
+            { name: 'K3s', id: 'k3s' },
+            { name: 'Kafka', id: 'kafka' },
+            { name: 'Kaggle', id: 'kaggle' },
+            { name: 'Kakoune', id: 'kakoune' },
+            { name: 'Kali Linux', id: 'kali' },
+            { name: 'Karma', id: 'karma' },
+            { name: 'KDE', id: 'kde' },
+            { name: 'Kdenlive', id: 'kdenlive' },
+            { name: 'KeyCloak', id: 'keycloak' },
+            { name: 'KeyDB', id: 'keydb' },
+            { name: 'Kibana', id: 'kibana' },
+            { name: 'Kitty', id: 'kitty' },
+            { name: 'Kong', id: 'kong' },
+            { name: 'Kotlin', id: 'kotlin' },
+            { name: 'Ktor', id: 'ktor' },
+            { name: 'Kubernetes', id: 'kubernetes' },
+            { name: 'KubeVela', id: 'kubevela' },
+            { name: 'Lambda', id: 'lambda' },
+            { name: 'LanceDB', id: 'lancedb' },
+            { name: 'Lando', id: 'lando' },
+            { name: 'LangChain', id: 'langchain' },
+            { name: 'Laravel', id: 'laravel' },
+            { name: 'Laravel Spark', id: 'laravelspark' },
+            { name: 'LaTeX', id: 'latex' },
+            { name: 'LazyVim', id: 'lazyvim' },
+            { name: 'Leaflet', id: 'leaflet' },
+            { name: 'LeetCode', id: 'leetcode' },
+            { name: 'Less', id: 'less' },
+            { name: 'LibreOffice', id: 'libreoffice' },
+            { name: 'LibreWolf', id: 'librewolf' },
+            { name: 'LibSQL', id: 'libsql' },
+            { name: 'Lighthouse', id: 'lighthouse' },
+            { name: 'Lightning', id: 'lightning' },
+            { name: 'Lightroom', id: 'lightroom' },
+            { name: 'Lightroom Classic', id: 'lightroomclassic' },
+            { name: 'LinkedIn', id: 'linkedin' },
+            { name: 'Linux', id: 'linux' },
+            { name: 'LiquidSoap', id: 'liquidsoap' },
+            { name: 'Lit', id: 'lit' },
+            { name: 'Litestar', id: 'litestar' },
+            { name: 'Litmus', id: 'litmus' },
+            { name: 'Livewire', id: 'livewire' },
+            { name: 'LlamaIndex', id: 'llamaindex' },
+            { name: 'Logto', id: 'logto' },
+            { name: 'Looker', id: 'looker' },
+            { name: 'Lottie Lab', id: 'lottielab' },
+            { name: 'Lua', id: 'lua' },
+            { name: 'Luau', id: 'luau' },
+            { name: 'Lucidchart', id: 'lucidchart' },
+            { name: 'Lunacy', id: 'lunacy' },
+            { name: 'LXC', id: 'lxc' },
+            { name: 'LynxJS', id: 'lynxjs' },
+            { name: 'Manim', id: 'manim' },
+            { name: 'Manjaro', id: 'manjaro' },
+            { name: 'MariaDB', id: 'mariadb' },
+            { name: 'Markdown', id: 'markdown' },
+            { name: 'Mastodon', id: 'mastodon' },
+            { name: 'Material UI', id: 'materialui' },
+            { name: 'MATLAB', id: 'matlab' },
+            { name: 'Matplotlib', id: 'matplotlib' },
+            { name: 'Maven', id: 'maven' },
+            { name: '3ds Max 8', id: 'max8' },
+            { name: '3ds Max 9', id: 'max9' },
+            { name: 'MDBook', id: 'mdbook' },
+            { name: 'Media Encoder', id: 'mediaencoder' },
+            { name: 'Medium', id: 'medium' },
+            { name: 'Mermaid', id: 'mermaid' },
+            { name: 'Metabase', id: 'metabase' },
+            { name: 'Meteor.js', id: 'meteorjs' },
+            { name: 'Microsoft Copilot', id: 'microsoftcopilot' },
+            { name: 'MikTeX', id: 'miktex' },
+            { name: 'Million.js', id: 'millionjs' },
+            { name: 'Milvus', id: 'milvus' },
+            { name: 'Mint', id: 'mint' },
+            { name: 'MindsDB', id: 'mindsdb' },
+            { name: 'Miro', id: 'miro' },
+            { name: 'Misskey', id: 'misskey' },
+            { name: 'Mistral', id: 'mistral' },
+            { name: 'MJML', id: 'mjml' },
+            { name: 'ML5', id: 'ml5' },
+            { name: 'MLflow', id: 'mlflow' },
+            { name: 'MobX', id: 'mobx' },
+            { name: 'Mocha', id: 'mocha' },
+            { name: 'ModelViewer', id: 'modelviewer' },
+            { name: 'Mojo', id: 'mojo' },
+            { name: 'MongoDB', id: 'mongodb' },
+            { name: 'Mongoose', id: 'mongoose' },
+            { name: 'Mux', id: 'mux' },
+            { name: 'MySQL', id: 'mysql' },
+            { name: 'N8N', id: 'n8n' },
+            { name: 'Nacos', id: 'nacos' },
+            { name: 'Neo4j', id: 'neo4j' },
+            { name: 'NeoForge', id: 'neoforge' },
+            { name: 'Neon', id: 'neon' },
+            { name: 'NeoVim', id: 'neovim' },
+            { name: 'NestJS', id: 'nestjs' },
+            { name: 'Netlify', id: 'netlify' },
+            { name: 'NextFlow', id: 'nextflow' },
+            { name: 'Next.js', id: 'nextjs' },
+            { name: 'nginx', id: 'nginx' },
+            { name: 'ngrok', id: 'ngrok' },
+            { name: 'NgRx', id: 'ngrx' },
+            { name: 'Nim', id: 'nim' },
+            { name: 'NixOS', id: 'nixos' },
+            { name: 'Node.js', id: 'nodejs' },
+            { name: 'Notepad++', id: 'notepadpp' },
+            { name: 'Notion', id: 'notion' },
+            { name: 'Nova', id: 'nova' },
+            { name: 'NPM', id: 'npm' },
+            { name: 'Nunjucks', id: 'nunjucks' },
+            { name: 'Nuxt.js', id: 'nuxtjs' },
+            { name: 'NVIDIA', id: 'nvidia' },
+            { name: 'NumPy', id: 'numpy' },
+            { name: 'OBS', id: 'obs' },
+            { name: 'Obsidian', id: 'obsidian' },
+            { name: 'OCaml', id: 'ocaml' },
+            { name: 'Octane', id: 'octane' },
+            { name: 'Octave', id: 'octave' },
+            { name: 'Odin', id: 'odin' },
+            { name: 'Ollama', id: 'ollama' },
+            { name: 'OneDrive', id: 'onedrive' },
+            { name: 'OneHouse', id: 'onehouse' },
+            { name: 'OneNote', id: 'onenote' },
+            { name: 'OpenCV', id: 'opencv' },
+            { name: 'OpenMM', id: 'openmm' },
+            { name: 'OpenSerGO', id: 'opensergo' },
+            { name: 'OpenShift', id: 'openshift' },
+            { name: 'Open Source', id: 'opensource' },
+            { name: 'OpenStack', id: 'openstack' },
+            { name: 'OpenTelemetry', id: 'opentelemetry' },
+            { name: 'OpenZeppelin', id: 'openzeppelin' },
+            { name: 'Opera', id: 'opera' },
+            { name: 'Oracle', id: 'oracle' },
+            { name: 'Orchid', id: 'orchid' },
+            { name: 'Outlook', id: 'outlook' },
+            { name: 'Overleaf', id: 'overleaf' },
+            { name: 'P4', id: 'p4' },
+            { name: 'p5.js', id: 'p5js' },
+            { name: 'Pail', id: 'pail' },
+            { name: 'PancakeSwap', id: 'pancakeswap' },
+            { name: 'Pandas', id: 'pandas' },
+            { name: 'PaperTrail', id: 'papertrail' },
+            { name: 'Payload', id: 'payload' },
+            { name: 'Power BI', id: 'pbi' },
+            { name: 'Pennant', id: 'pennant' },
+            { name: 'Perl', id: 'perl' },
+            { name: 'Phaser', id: 'phaser' },
+            { name: 'PHP', id: 'php' },
+            { name: 'PHPStan', id: 'phpstan' },
+            { name: 'PHPStorm', id: 'phpstorm' },
+            { name: 'Photoshop', id: 'photoshop' },
+            { name: 'Photoshop Classic', id: 'photoshopclassic' },
+            { name: 'Photoshop Express', id: 'photoshopexpress' },
+            { name: 'Pico CSS', id: 'picocss' },
+            { name: 'Pinecone', id: 'pinecone' },
+            { name: 'PineScript', id: 'pinescript' },
+            { name: 'Pinia', id: 'pinia' },
+            { name: 'Pint', id: 'pint' },
+            { name: 'PKL', id: 'pkl' },
+            { name: 'Plan 9', id: 'plan9' },
+            { name: 'PlanetScale', id: 'planetscale' },
+            { name: 'PlatformIO', id: 'platformio' },
+            { name: 'PlayCanvas', id: 'playcanvas' },
+            { name: 'PlayFab', id: 'playfab' },
+            { name: 'Playwright', id: 'playwright' },
+            { name: 'Plotly', id: 'plotly' },
+            { name: 'PL/SQL', id: 'plsql' },
+            { name: 'PM2', id: 'pm2' },
+            { name: 'PNPM', id: 'pnpm' },
+            { name: 'PocketBase', id: 'pocketbase' },
+            { name: 'Podman', id: 'podman' },
+            { name: 'Polar', id: 'polar' },
+            { name: 'Polars', id: 'polars' },
+            { name: 'Pop!_OS', id: 'popos' },
+            { name: 'Portainer', id: 'portainer' },
+            { name: 'Portfolio', id: 'portfolio' },
+            { name: 'PostCSS', id: 'postcss' },
+            { name: 'PostgreSQL', id: 'postgresql' },
+            { name: 'Postman', id: 'postman' },
+            { name: 'PowerPoint', id: 'powerpoint' },
+            { name: 'PowerShell', id: 'powershell' },
+            { name: 'Preact', id: 'preact' },
+            { name: 'Prelude', id: 'prelude' },
+            { name: 'Premiere', id: 'premiere' },
+            { name: 'Premiere Rush', id: 'premiererush' },
+            { name: 'Presto', id: 'presto' },
+            { name: 'Prettier', id: 'prettier' },
+            { name: 'PrimeNG', id: 'primeng' },
+            { name: 'PrimeReact', id: 'primereact' },
+            { name: 'PrimeVue', id: 'primevue' },
+            { name: 'Prisma', id: 'prisma' },
+            { name: 'Processing', id: 'processing' },
+            { name: 'Prometheus', id: 'prometheus' },
+            { name: 'Prompts', id: 'prompts' },
+            { name: 'Proton', id: 'proton' },
+            { name: 'Proxmox', id: 'proxmox' },
+            { name: 'Pug', id: 'pug' },
+            { name: 'Pulsar', id: 'pulsar' },
+            { name: 'Pulumi', id: 'pulumi' },
+            { name: 'Puppeteer', id: 'puppeteer' },
+            { name: 'PuppyGraph', id: 'puppygraph' },
+            { name: 'PuTTY', id: 'putty' },
+            { name: 'PWA', id: 'pwa' },
+            { name: 'PyCharm', id: 'pycharm' },
+            { name: 'Pygame', id: 'pygame' },
+            { name: 'PySpark', id: 'pyspark' },
+            { name: 'pytest', id: 'pytest' },
+            { name: 'Python', id: 'python' },
+            { name: 'PyTorch', id: 'pytorch' },
+            { name: 'Pyxel', id: 'pyxel' },
+            { name: 'Qdrant', id: 'qdrant' },
+            { name: 'QEMU', id: 'qemu' },
+            { name: 'Qodana', id: 'qodana' },
+            { name: 'Qt', id: 'qt' },
+            { name: 'QuarkusJS', id: 'quarkus' },
+            { name: 'QueryDSL', id: 'querydsl' },
+            { name: 'QubesOS', id: 'qubesos' },
+            { name: 'QuiltMC', id: 'quiltmc' },
+            { name: 'R', id: 'r' },
+            { name: 'RabbitMQ', id: 'rabbitmq' },
+            { name: 'Radix', id: 'radix' },
+            { name: 'Rails', id: 'rails' },
+            { name: 'Railway', id: 'railway' },
+            { name: 'Rancher', id: 'rancher' },
+            { name: 'Raspberry Pi', id: 'raspberrypi' },
+            { name: 'RatatuiRust', id: 'ratatui' },
+            { name: 'Ray', id: 'ray' },
+            { name: 'RDS', id: 'rds' },
+            { name: 'React', id: 'react' },
+            { name: 'React Bootstrap', id: 'reactbootstrap' },
+            { name: 'React Lynx', id: 'reactlynx' },
+            { name: 'React Native', id: 'reactnative' },
+            { name: 'ReactOS', id: 'reactos' },
+            { name: 'React Query', id: 'reactquery' },
+            { name: 'React Router', id: 'reactrouter' },
+            { name: 'ReactiveX', id: 'reactivex' },
+            { name: 'Recoil', id: 'recoil' },
+            { name: 'Reddit', id: 'reddit' },
+            { name: 'Red Hat', id: 'redhat' },
+            { name: 'Redis', id: 'redis' },
+            { name: 'Redshift', id: 'redshift' },
+            { name: 'Redux', id: 'redux' },
+            { name: 'Regex', id: 'regex' },
+            { name: 'Remix', id: 'remix' },
+            { name: 'Render', id: 'render' },
+            { name: 'RenPy', id: 'renpy' },
+            { name: 'Replit', id: 'replit' },
+            { name: 'Resend', id: 'resend' },
+            { name: 'ReSharper', id: 'resharper' },
+            { name: 'RestructuredText', id: 'restructuredtext' },
+            { name: 'Reverb', id: 'reverb' },
+            { name: 'Revolt', id: 'revolt' },
+            { name: 'Rider', id: 'rider' },
+            { name: 'Roblox Studio', id: 'robloxstudio' },
+            { name: 'Rocket', id: 'rocket' },
+            { name: 'RocketMQ', id: 'rocketmq' },
+            { name: 'RollupJS', id: 'rollupjs' },
+            { name: 'ROS', id: 'ros' },
+            { name: 'Ruby', id: 'ruby' },
+            { name: 'Rubocop', id: 'rubocop' },
+            { name: 'RubyMine', id: 'rubymine' },
+            { name: 'Rust', id: 'rust' },
+            { name: 'RustRover', id: 'rustrover' },
+            { name: 'S3', id: 's3' },
+            { name: 'Safari', id: 'safari' },
+            { name: 'Sail', id: 'sail' },
+            { name: 'Salesforce', id: 'salesforce' },
+            { name: 'Sanctum', id: 'sanctum' },
+            { name: 'Sanity', id: 'sanity' },
+            { name: 'SAS', id: 'sas' },
+            { name: 'Sass', id: 'sass' },
+            { name: 'Scala', id: 'scala' },
+            { name: 'Scikit-learn', id: 'scikitlearn' },
+            { name: 'SciPy', id: 'scipy' },
+            { name: 'Scout', id: 'scout' },
+            { name: 'Scratch', id: 'scratch' },
+            { name: 'Seaborn', id: 'seaborn' },
+            { name: 'Seata', id: 'seata' },
+            { name: 'Selenium', id: 'selenium' },
+            { name: 'Sentinel', id: 'sentinel' },
+            { name: 'Sentry', id: 'sentry' },
+            { name: 'Sequelize', id: 'sequelize' },
+            { name: 'SES', id: 'ses' },
+            { name: 'Session', id: 'session' },
+            { name: 'ShadCN', id: 'shadcn' },
+            { name: 'SharePoint', id: 'sharepoint' },
+            { name: 'Shopify', id: 'shopify' },
+            { name: 'Signal', id: 'signal' },
+            { name: 'SkeletonUI', id: 'skeletonui' },
+            { name: 'SketchUp', id: 'sketchup' },
+            { name: 'SkyWalking', id: 'skywalking' },
+            { name: 'Slack', id: 'slack' },
+            { name: 'Snowflake', id: 'snowflake' },
+            { name: 'Snyk', id: 'snyk' },
+            { name: 'Socialite', id: 'socialite' },
+            { name: 'SocketIO', id: 'socketio' },
+            { name: 'Solana', id: 'solana' },
+            { name: 'Solidity', id: 'solidity' },
+            { name: 'SolidJS', id: 'solidjs' },
+            { name: 'SonarQube', id: 'sonarqube' },
+            { name: 'Spark', id: 'spark' },
+            { name: 'SparkSQL', id: 'sparksql' },
+            { name: 'Sphinx', id: 'sphinx' },
+            { name: 'Spring', id: 'spring' },
+            { name: 'Spring Batch', id: 'springbatch' },
+            { name: 'Spring Data JPA', id: 'springdatajpa' },
+            { name: 'Spring Security', id: 'springsecurity' },
+            { name: 'SQLAlchemy', id: 'sqlalchemy' },
+            { name: 'SQLite', id: 'sqlite' },
+            { name: 'SQL Server', id: 'sqlserver' },
+            { name: 'SQS', id: 'sqs' },
+            { name: 'Stack Overflow', id: 'stackoverflow' },
+            { name: 'Stan', id: 'stan' },
+            { name: 'Starburst', id: 'starburst' },
+            { name: 'StarRocks', id: 'starrocks' },
+            { name: 'Steam', id: 'steam' },
+            { name: 'Stock', id: 'stock' },
+            { name: 'Storyblok', id: 'storyblok' },
+            { name: 'Storybook', id: 'storybook' },
+            { name: 'Strapi', id: 'strapi' },
+            { name: 'Streamlit', id: 'streamlit' },
+            { name: 'Stripe', id: 'stripe' },
+            { name: 'Styled Components', id: 'styledcomponents' },
+            { name: 'StyleLint', id: 'stylelint' },
+            { name: 'Stylus', id: 'stylus' },
+            { name: 'Sublime Text', id: 'sublime' },
+            { name: 'Supabase', id: 'supabase' },
+            { name: 'SurrealDB', id: 'surrealdb' },
+            { name: 'SushiSwap', id: 'sushiswap' },
+            { name: 'Svelte', id: 'svelte' },
+            { name: 'SVG', id: 'svg' },
+            { name: 'SVN', id: 'svn' },
+            { name: 'Swagger', id: 'swagger' },
+            { name: 'Swift', id: 'swift' },
+            { name: 'Symfony', id: 'symfony' },
+            { name: 'SystemD', id: 'systemd' },
+            { name: 'T3', id: 't3' },
+            { name: 'Tableau', id: 'tableau' },
+            { name: 'Tailscale', id: 'tailscale' },
+            { name: 'TailsOS', id: 'tailsos' },
+            { name: 'Tailwind CSS', id: 'tailwindcss' },
+            { name: 'Tally Prime', id: 'tallyprime' },
+            { name: 'TanStack', id: 'tanstack' },
+            { name: 'Tauri', id: 'tauri' },
+            { name: 'Teams', id: 'teams' },
+            { name: 'Tecton', id: 'tecton' },
+            { name: 'Telegram', id: 'telegram' },
+            { name: 'Telescope', id: 'telescope' },
+            { name: 'TensorFlow', id: 'tensorflow' },
+            { name: 'Terminal', id: 'terminal' },
+            { name: 'Terraform', id: 'terraform' },
+            { name: 'Testing Library', id: 'testinglibrary' },
+            { name: 'TeXmaker', id: 'texmaker' },
+            { name: 'ThreeJS', id: 'threejs' },
+            { name: 'Thunderbird', id: 'thunderbird' },
+            { name: 'Thunkable', id: 'thunkable' },
+            { name: 'TiDB', id: 'tidb' },
+            { name: 'tmux', id: 'tmux' },
+            { name: 'Tokio RS', id: 'tokiors' },
+            { name: 'Tomcat', id: 'tomcat' },
+            { name: 'TOML', id: 'toml' },
+            { name: 'Tor', id: 'tor' },
+            { name: 'TouchDesigner', id: 'touchdesigner' },
+            { name: 'Trino', id: 'trino' },
+            { name: 'tRPC', id: 'trpc' },
+            { name: 'Truffle', id: 'truffle' },
+            { name: 'TryHackMe', id: 'tryhackme' },
+            { name: 'TurboRepo', id: 'turborepo' },
+            { name: 'Turso', id: 'turso' },
+            { name: 'Twig', id: 'twig' },
+            { name: 'Twitch', id: 'twitch' },
+            { name: 'TypeORM', id: 'typeorm' },
+            { name: 'TypeScript', id: 'typescript' },
+            { name: 'Typst', id: 'typst' },
+            { name: 'Ubuntu', id: 'ubuntu' },
+            { name: 'UML', id: 'uml' },
+            { name: 'Uniswap', id: 'uniswap' },
+            { name: 'Unity', id: 'unity' },
+            { name: 'Unity Catalog', id: 'unitycatalog' },
+            { name: 'UnoCSS', id: 'unocss' },
+            { name: 'Unreal Engine', id: 'unrealengine' },
+            { name: 'Unstructured', id: 'unstructured' },
+            { name: 'Upwork', id: 'upwork' },
+            { name: 'V', id: 'v' },
+            { name: 'Vagrant', id: 'vagrant' },
+            { name: 'Vala', id: 'vala' },
+            { name: 'Vapor', id: 'vapor' },
+            { name: 'Vegas Pro', id: 'vegaspro' },
+            { name: 'Vercel', id: 'vercel' },
+            { name: 'Vim', id: 'vim' },
+            { name: 'VirtualBox', id: 'virtualbox' },
+            { name: 'Visio', id: 'visio' },
+            { name: 'Visual Basic', id: 'visualbasic' },
+            { name: 'Visual Studio', id: 'visualstudio' },
+            { name: 'Vite', id: 'vite' },
+            { name: 'VitePress', id: 'vitepress' },
+            { name: 'Vitest', id: 'vitest' },
+            { name: 'VMware Workstation', id: 'vmwareworkstation' },
+            { name: 'VS Code', id: 'vscode' },
+            { name: 'VS Code Insiders', id: 'vscodeinsiders' },
+            { name: 'VSCodium', id: 'vscodium' },
+            { name: 'Vue.js', id: 'vuejs' },
+            { name: 'Vuetify', id: 'vuetify' },
+            { name: 'Vyper', id: 'vyper' },
+            { name: 'Wails', id: 'wails' },
+            { name: 'Weights & Biases', id: 'wandb' },
+            { name: 'Warp', id: 'warp' },
+            { name: 'WebAssembly', id: 'webassembly' },
+            { name: 'Webflow', id: 'webflow' },
+            { name: 'Webpack', id: 'webpack' },
+            { name: 'WebSocket', id: 'websocket' },
+            { name: 'WebStorm', id: 'webstorm' },
+            { name: 'WebStudio', id: 'webstudio' },
+            { name: 'WezTerm', id: 'wezterm' },
+            { name: 'Windi CSS', id: 'windicss' },
+            { name: 'Windmill', id: 'windmill' },
+            { name: 'Windows', id: 'windows' },
+            { name: 'WinEdt', id: 'winedt' },
+            { name: 'Wireshark', id: 'wireshark' },
+            { name: 'Word', id: 'word' },
+            { name: 'Workers', id: 'workers' },
+            { name: 'WordPress', id: 'wordpress' },
+            { name: 'WSL', id: 'wsl' },
+            { name: 'WXT', id: 'wxt' },
+            { name: 'X (Twitter)', id: 'x' },
+            { name: 'Xcode', id: 'xcode' },
+            { name: 'XD', id: 'xd' },
+            { name: 'X-Table', id: 'xtable' },
+            { name: 'Yammer', id: 'yammer' },
+            { name: 'YAML', id: 'yaml' },
+            { name: 'Yarn', id: 'yarn' },
+            { name: 'Yew', id: 'yew' },
+            { name: 'Yii', id: 'yii' },
+            { name: 'YouTube', id: 'youtube' },
+            { name: 'YUI', id: 'yui' },
+            { name: 'Zabbix', id: 'zabbix' },
+            { name: 'Zed', id: 'zed' },
+            { name: 'Zellij', id: 'zellij' },
+            { name: 'Zen', id: 'zen' },
+            { name: 'Zig', id: 'zig' },
+            { name: 'Zudoku', id: 'zudoku' },
+            { name: 'Zustand', id: 'zustand' }
+        ];
+        const selectedSkills = [];
+        const searchInput = document.getElementById('searchInput');
+        const iconGrid = document.getElementById('iconGrid');
+        const previewIcons = document.getElementById('previewIcons');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const copyBtn = document.getElementById('copyBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // Initialize theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        }
+
+        function updateThemeButton(theme) {
+            themeToggle.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        });
+
+        // Render icon grid
+        function renderIcons(filter = '') {
+            iconGrid.innerHTML = '';
+            const filtered = skills.filter(skill => 
+                skill.name.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            filtered.forEach(skill => {
+                const card = document.createElement('div');
+                card.className = 'icon-card';
+                card.innerHTML = `
+                    <img src="https://skill-icons-fast.vercel.app/api/icons?i=${skill.id}" alt="${skill.name}" class="icon-image">
+                    <span class="icon-name">${skill.name}</span>
+                `;
+
+                if (selectedSkills.some(s => s.id === skill.id)) {
+                    card.classList.add('selected');
+                }
+
+                card.addEventListener('click', () => toggleSkill(skill, card));
+                iconGrid.appendChild(card);
+            });
+        }
+
+        function toggleSkill(skill, card) {
+            const index = selectedSkills.findIndex(s => s.id === skill.id);
+            
+            if (index > -1) {
+                selectedSkills.splice(index, 1);
+                card.classList.remove('selected');
+            } else {
+                selectedSkills.push(skill);
+                card.classList.add('selected');
+            }
+
+            updatePreview();
+        }
+
+        function updatePreview() {
+            // Update preview icons
+            if (selectedSkills.length > 0) {
+                const iconIds = selectedSkills.map(skill => skill.id).join(',');
+                previewIcons.innerHTML = `<img src="https://skill-icons-fast.vercel.app/api/icons?i=${iconIds}" alt="Selected Skills" style="max-width: 100%; height: auto;">`;
+            } else {
+                previewIcons.innerHTML = '';
+            }
+
+            // Update code display
+            if (selectedSkills.length > 0) {
+                const iconIds = selectedSkills.map(skill => skill.id).join(',');
+                const markdown = `![My Skills](https://skill-icons-fast.vercel.app/api/icons?i=${iconIds})`;
+
+                codeDisplay.textContent = markdown;
+                copyBtn.style.display = 'block';
+                clearBtn.style.display = 'block';
+            } else {
+                codeDisplay.textContent = 'No skills selected';
+                copyBtn.style.display = 'none';
+                clearBtn.style.display = 'none';
+            }
+        }
+
+        // Copy to clipboard
+        copyBtn.addEventListener('click', async () => {
+            const iconIds = selectedSkills.map(skill => skill.id).join(',');
+            const markdown = `![My Skills](https://skill-icons-fast.vercel.app/api/icons?i=${iconIds})`;
+
+            try {
+                await navigator.clipboard.writeText(markdown);
+                copyBtn.textContent = '✓ Copied!';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy Markdown';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+            }
+        });
+
+        // Clear all
+        clearBtn.addEventListener('click', () => {
+            selectedSkills.length = 0;
+            document.querySelectorAll('.icon-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            updatePreview();
+        });
+        // Search filter
+        searchInput.addEventListener('input', (e) => {
+            renderIcons(e.target.value);
+        });
+
+        // Initialize
+        initTheme();
+        renderIcons();
+    </script>
+</body>
+</html>
